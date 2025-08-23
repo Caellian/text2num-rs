@@ -1,5 +1,7 @@
 //! English number interpreter
 
+use alloc::{format, string::String, vec::Vec};
+
 use crate::digit_string::DigitString;
 use crate::error::Error;
 
@@ -128,27 +130,14 @@ impl LangInterpreter for English {
         }
     }
 
-    fn format_and_value(&self, b: &DigitString) -> (String, f64) {
-        let repr = b.to_string();
-        let val: f64 = repr.parse().unwrap();
-        if let MorphologicalMarker::Ordinal(marker) = b.marker {
-            (format!("{}{}", b.to_string(), marker), val)
-        } else {
-            (repr, val)
-        }
-    }
-
     fn format_decimal_and_value(
         &self,
         int: &DigitString,
         dec: &DigitString,
         _sep: char,
     ) -> (String, f64) {
-        let irepr = int.to_string();
-        let drepr = dec.to_string();
-        let frepr = format!("{irepr}.{drepr}");
-        let val = frepr.parse().unwrap();
-        (frepr, val)
+        let val = int.parse() as f64 + dec.parse_decimal();
+        (format!("{int}.{dec}"), val)
     }
 
     fn get_morph_marker(&self, word: &str) -> MorphologicalMarker {
@@ -219,7 +208,7 @@ mod tests {
         ($text:expr, $res:expr) => {
             let f = English {};
             let res = text2digits($text, &f);
-            dbg!(&res);
+            crate::tests::dbg!(&res);
             assert!(res.is_ok());
             assert_eq!(res.unwrap(), $res)
         };

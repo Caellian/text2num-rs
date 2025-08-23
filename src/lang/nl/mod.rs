@@ -179,7 +179,8 @@ impl LangInterpreter for Dutch {
             }
             "honderd" | "honderdste" => {
                 let peek = b.peek(2);
-                dbg!(&peek);
+                #[cfg(test)]
+                crate::tests::dbg!(&peek);
                 if peek.len() == 1 && peek == b"1" {
                     Err(Error::Overlap)
                 } else {
@@ -241,29 +242,6 @@ impl LangInterpreter for Dutch {
         }
     }
 
-    fn format_and_value(&self, b: &DigitString) -> (String, f64) {
-        let repr = b.to_string();
-        let val: f64 = repr.parse().unwrap();
-        if let MorphologicalMarker::Ordinal(marker) = b.marker {
-            (format!("{}{}", b.to_string(), marker), val)
-        } else {
-            (repr, val)
-        }
-    }
-
-    fn format_decimal_and_value(
-        &self,
-        int: &DigitString,
-        dec: &DigitString,
-        sep: char,
-    ) -> (String, f64) {
-        let irepr = int.to_string();
-        let drepr = dec.to_string();
-        let frepr = format!("{irepr}{sep}{drepr}");
-        let val = format!("{irepr}.{drepr}").parse().unwrap();
-        (frepr, val)
-    }
-
     fn get_morph_marker(&self, word: &str) -> MorphologicalMarker {
         if word.ends_with("ste") || word.ends_with("de") {
             MorphologicalMarker::Ordinal("e")
@@ -286,7 +264,7 @@ mod tests {
         ($text:expr, $res:expr) => {
             let f = Dutch::new();
             let res = text2digits($text, &f);
-            dbg!(&res);
+            crate::tests::dbg!(&res);
             assert!(res.is_ok());
             assert_eq!(res.unwrap(), $res)
         };
@@ -337,8 +315,6 @@ mod tests {
         );
         assert_text2digits!("Driehonderdzevenenveertig miljard zeshonderdvijfentwintig miljoen zevenhonderdachtentwintigduizend tweehonderdeenentwintig", "347625728221");
     }
-
-    ///
 
     #[test]
     fn test_apply() {
