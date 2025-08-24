@@ -1,6 +1,6 @@
 //! Some tokenizers
 
-use alloc::{string::String, borrow::ToOwned};
+use alloc::{borrow::ToOwned, string::String};
 
 use daachorse::{
     charwise::iter::LestmostFindIterator, errors::Result, CharwiseDoubleArrayAhoCorasick,
