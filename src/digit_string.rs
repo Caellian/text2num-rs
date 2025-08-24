@@ -481,4 +481,20 @@ mod tests {
         assert!(!dstring.is_position_free(3));
         assert!(!dstring.is_position_free(5));
     }
+
+    #[test]
+    fn test_int_parse() {
+        let mut dstring = DigitString::new();
+        dstring.buffer = Vec::from(b"12345000");
+        dstring.leading_zeroes = 1000;
+        assert_eq!(dstring.parse(), 12345000)
+    }
+
+    #[test]
+    fn test_decimal_parse() {
+        let mut dstring = DigitString::new();
+        dstring.buffer = Vec::from(b"123");
+        dstring.leading_zeroes = 3;
+        assert_eq!(dstring.parse_decimal(), 0.000123)
+    }
 }
