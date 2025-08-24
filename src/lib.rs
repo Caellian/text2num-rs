@@ -235,7 +235,7 @@ pub(crate) mod tests {
     }
     #[allow(clippy::single_component_path_imports)]
     pub(crate) use dbg;
-    
+
     #[test]
     #[cfg(feature = "fr")]
     fn test_access_fr() {

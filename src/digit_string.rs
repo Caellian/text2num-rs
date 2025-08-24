@@ -264,7 +264,9 @@ impl Default for DigitString {
 /// Formal base 10 string representation with leading zeroes
 impl core::fmt::Display for DigitString {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
-        for _ in 0..self.leading_zeroes { f.write_char('0')?; }
+        for _ in 0..self.leading_zeroes {
+            f.write_char('0')?;
+        }
         f.write_str(core::str::from_utf8(self.buffer.as_slice()).unwrap())
     }
 }
